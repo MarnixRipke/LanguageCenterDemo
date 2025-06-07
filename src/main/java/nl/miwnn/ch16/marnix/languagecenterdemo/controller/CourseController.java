@@ -1,10 +1,11 @@
 package nl.miwnn.ch16.marnix.languagecenterdemo.controller;
 
 
+import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.CourseRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import java.time.LocalDateTime;
+
 
 /**
  * @author Marnix Ripke
@@ -14,9 +15,15 @@ import java.time.LocalDateTime;
 @Controller
 public class CourseController {
 
-   @GetMapping("/")
+    private final CourseRepository courseRepository;
+
+    public CourseController(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
+
+    @GetMapping("/")
     private String showCourseOverview(Model datamodel) {
-        datamodel.addAttribute("nu", LocalDateTime.now());
+        datamodel.addAttribute("allCourses", courseRepository.findAll());
 
         return "courseOverview";
 

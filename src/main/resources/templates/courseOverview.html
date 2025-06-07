@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:ts="https://thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Overview of all the courses at the Language Center</title>
@@ -7,10 +7,18 @@
 <body>
     <h1>Overview of all the courses at the Language Center</h1>
 
-    <p>
-        <span th:text="${nu}"></span>
+    <table>
+        <tr>
+            <th>Course Title</th>
+            <th>Teacher</th>
+        </tr>
+        <tr th:each="course : ${allCourses}">
+            <td th:text="${course.title}"></td>
+            <td th:text="${course.teacher}"></td>
+        </tr>
 
-    </p>
+    </table>
+
 
 </body>
 </html>
