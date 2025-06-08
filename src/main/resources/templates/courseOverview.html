@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Overview of all the courses at the Language Center</title>
@@ -16,9 +16,9 @@
             <td th:text="${course.title}"></td>
             <td th:text="${course.teacher}"></td>
         </tr>
-
     </table>
 
+<a th:href="@{/course/new}">Add new course</a>
 
 </body>
 </html>

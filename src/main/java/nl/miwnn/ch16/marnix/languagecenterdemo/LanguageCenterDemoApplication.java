@@ -10,4 +10,6 @@ public class LanguageCenterDemoApplication {
 		SpringApplication.run(LanguageCenterDemoApplication.class, args);
 	}
 
+
+
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a new course</title>
+</head>
+<body>
+<h1>Create a new course</h1>
+
+<form th:action="@{/course/save}" method="post" th:object="${formCourse}">
+
+    <table>
+        <tr>
+            <td>Title</td>
+            <td><input type="text" th:field="*{title}"/></td>
+        </tr>
+        <tr>
+            <td>Teacher</td>
+            <td><input type="text" th:field="*{teacher}"/></td>
+        </tr>
+    </table>
+
+    <input type="submit" value="Save course"/>
+
+</form>
+</body>
+</html>
