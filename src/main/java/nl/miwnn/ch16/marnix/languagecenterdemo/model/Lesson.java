@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 @Entity
 public class Lesson {
 
-    private static final boolean DEAFULT_AVAILABLE = true;
+    private static final boolean DEFAULT_AVAILABLE = true;
 
     @Id @GeneratedValue
     private Long lessonId;
@@ -22,7 +22,7 @@ public class Lesson {
 
     public Lesson(Course course) {
         this.course = course;
-        this.notFull = DEAFULT_AVAILABLE;
+        this.notFull = DEFAULT_AVAILABLE;
     }
 
     // exists for JPA

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Overview of all teachers</title>
+</head>
+    <body>
+        <h1>Overview of all teachers</h1>
+
+        <form th:action="@{/teacher/save}" method="post" th:object="${formTeacher}">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+                <tr th:each="teacher : ${allTeachers}">
+                    <td th:text="${teacher.name}"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input type="text" th:field="*{name}" /></td>
+                    <td><input type="submit" value="save teacher" /></td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>
