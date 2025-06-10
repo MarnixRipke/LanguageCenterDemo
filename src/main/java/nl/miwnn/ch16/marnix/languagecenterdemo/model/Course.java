@@ -3,6 +3,9 @@ package nl.miwnn.ch16.marnix.languagecenterdemo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+import java.util.List;
 
 /**
  * @author Marnix Ripke
@@ -18,6 +21,24 @@ public class Course {
     private String title;
     private String teacher;
 
+    @OneToMany(mappedBy = "course")
+    private List<Lesson> lessons;
+
+    public int getNumberOfLessons() {
+        return lessons.size();
+    }
+
+    public int getNumberOfAvailableLessons () {
+        int count = 0;
+
+        for (Lesson lesson : lessons) {
+            if (lesson.getNotFull()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
 
     @Override
     public String toString() {
@@ -48,5 +69,7 @@ public class Course {
         this.teacher = teacher;
     }
 
-
+    public List<Lesson> getLessons() {
+        return lessons;
+    }
 }
