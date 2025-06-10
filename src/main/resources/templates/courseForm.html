@@ -16,7 +16,14 @@
         </tr>
         <tr>
             <td>Teacher</td>
-            <td><input type="text" th:field="*{teacher}"/></td>
+            <td>
+                <select th:field ="*{teachers}" multiple>
+                    <option th:each ="teacher : ${allTeachers}"
+                            th:text ="${teacher.name}"
+                            th:value="${teacher.teacherId}">
+                    </option>
+                </select>
+            </td>
         </tr>
     </table>
 

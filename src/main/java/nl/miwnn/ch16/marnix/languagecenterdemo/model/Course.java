@@ -1,11 +1,9 @@
 package nl.miwnn.ch16.marnix.languagecenterdemo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Marnix Ripke
@@ -19,10 +17,12 @@ public class Course {
     private Long courseId;
 
     private String title;
-    private String teacher;
+
+    @ManyToMany
+    private Set<Teacher> teachers;
 
     @OneToMany(mappedBy = "course")
-    private List<Lesson> lessons;
+    private Set <Lesson> lessons;
 
     public int getNumberOfLessons() {
         return lessons.size();
@@ -40,9 +40,19 @@ public class Course {
         return count;
     }
 
+    public String getTeacherNames() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Teacher teacher : teachers) {
+            stringBuilder.append(teacher.getName()).append(", ");
+        }
+
+        return stringBuilder.toString();
+    }
+
     @Override
     public String toString() {
-        return String.format("Course title: %s, Teacher: %s", this.title, this.teacher);
+        return String.format("Course title: %s", this.title);
     }
 
     public Long getCourseId() {
@@ -61,15 +71,19 @@ public class Course {
         this.title = title;
     }
 
-    public String getTeacher() {
-        return teacher;
+    public Set<Teacher> getTeachers() {
+        return teachers;
     }
 
-    public void setTeacher(String teacher) {
-        this.teacher = teacher;
+    public void setTeachers(Set<Teacher> teachers) {
+        this.teachers = teachers;
     }
 
-    public List<Lesson> getLessons() {
+    public Set<Lesson> getLessons() {
         return lessons;
+    }
+
+    public void setLessons(Set<Lesson> lessons) {
+        this.lessons = lessons;
     }
 }

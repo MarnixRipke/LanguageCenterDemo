@@ -3,6 +3,7 @@ package nl.miwnn.ch16.marnix.languagecenterdemo.controller;
 
 import nl.miwnn.ch16.marnix.languagecenterdemo.model.Course;
 import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.CourseRepository;
+import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.TeacherRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class CourseController {
 
     private final CourseRepository courseRepository;
+    private final TeacherRepository teacherRepository;
 
-    public CourseController(CourseRepository courseRepository) {
+    public CourseController(CourseRepository courseRepository, TeacherRepository teacherRepository) {
         this.courseRepository = courseRepository;
+        this.teacherRepository = teacherRepository;
     }
 
     @GetMapping({"/", "/course/overview"})
@@ -37,7 +40,7 @@ public class CourseController {
     @GetMapping("/course/new")
     private String showNewCourseForm(Model datamodel) {
         datamodel.addAttribute("formCourse", new Course());
-
+        datamodel.addAttribute("allTeachers", teacherRepository.findAll());
         return "courseForm";
     }
 

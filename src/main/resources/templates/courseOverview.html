@@ -17,7 +17,7 @@
         </tr>
         <tr th:each="course : ${allCourses}">
             <td th:text="${course.title}"></td>
-            <td th:text="${course.teacher}"></td>
+            <td th:text="${course.teacherNames}"></td>
             <td>
                 <span th:text="${course.getNumberOfAvailableLessons()}"></span> / <span th:text="${course.getNumberOfLessons()}"></span>
             </td>
