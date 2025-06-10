@@ -12,11 +12,13 @@
             <th>Course title</th>
             <th>Teacher</th>
             <th></th>
+            th></th>
         </tr>
         <tr th:each="course : ${allCourses}">
             <td th:text="${course.title}"></td>
             <td th:text="${course.teacher}"></td>
             <td><a th:href="@{/course/delete/{courseId} (courseId = ${course.CourseId})}">delete</a></td>
+            <td><a th:href="@{/lesson/new/{courseId} (courseId = ${course.CourseId})}">add</a></td>
         </tr>
     </table>
 
