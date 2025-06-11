@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Overview of all the courses at the Language Center</title>
+<head th:replace="~{/fragments/general :: baseheader}">
 </head>
 <body>
+
+<div th:replace="~{fragments/general :: navbar}"></div>
+
+<div class="container">
     <h1>Overview of all the courses at the Language Center</h1>
 
     <table>
@@ -19,14 +21,20 @@
             <td th:text="${course.title}"></td>
             <td th:text="${course.teacherNames}"></td>
             <td>
-                <span th:text="${course.getNumberOfAvailableLessons()}"></span> / <span th:text="${course.getNumberOfLessons()}"></span>
+                <span th:text="${course.getNumberOfAvailableLessons()}"></span> / <span
+                    th:text="${course.getNumberOfLessons()}"></span>
             </td>
             <td><a th:href="@{/course/delete/{courseId} (courseId = ${course.CourseId})}">delete</a></td>
             <td><a th:href="@{/lesson/new/{courseId} (courseId = ${course.CourseId})}">add</a></td>
         </tr>
     </table>
->
-<a th:href="@{/course/new}">Add new course</a>
+    >
+    <a th:href="@{/course/new}">Add new course</a>
+</div>
+
+<div th:replace="~{fragments/general :: footer}"></div>
+<div th:replace="~{fragments/general :: bottomscripts}"></div>
+
 
 </body>
 </html>

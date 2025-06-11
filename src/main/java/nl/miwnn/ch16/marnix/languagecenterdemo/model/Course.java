@@ -2,7 +2,6 @@ package nl.miwnn.ch16.marnix.languagecenterdemo.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Set;
 
 /**

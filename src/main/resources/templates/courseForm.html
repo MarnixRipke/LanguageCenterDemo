@@ -17,9 +17,9 @@
         <tr>
             <td>Teacher</td>
             <td>
-                <select th:field ="*{teachers}" multiple>
-                    <option th:each ="teacher : ${allTeachers}"
-                            th:text ="${teacher.name}"
+                <select th:field="*{teachers}" multiple>
+                    <option th:each="teacher : ${allTeachers}"
+                            th:text="${teacher.name}"
                             th:value="${teacher.teacherId}">
                     </option>
                 </select>
