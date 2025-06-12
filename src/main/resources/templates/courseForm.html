@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Create a new course</title>
+<head th:replace="~{/fragments/general :: baseheader(~{:: title})}">
+    <title>Course Form</title>
 </head>
 <body>
-<h1>Create a new course</h1>
 
-<form th:action="@{/course/save}" method="post" th:object="${formCourse}">
+<div th:replace="~{fragments/general :: navbar}"></div>
 
-    <table>
-        <tr>
-            <td>Title</td>
-            <td><input type="text" th:field="*{title}"/></td>
-        </tr>
-        <tr>
-            <td>Teacher</td>
-            <td>
-                <select th:field="*{teachers}" multiple>
-                    <option th:each="teacher : ${allTeachers}"
-                            th:text="${teacher.name}"
-                            th:value="${teacher.teacherId}">
-                    </option>
-                </select>
-            </td>
-        </tr>
-    </table>
+<div class="container">
+    <h1>Create a new course</h1>
 
-    <input type="submit" value="Save course"/>
+    <form th:action="@{/course/save}" method="post" th:object="${formCourse}">
 
-</form>
+        <table>
+            <tr>
+                <td>Title</td>
+                <td><input type="text" th:field="*{title}"/></td>
+            </tr>
+            <tr>
+                <td>Teacher</td>
+                <td>
+                    <select th:field="*{teachers}" multiple>
+                        <option th:each="teacher : ${allTeachers}"
+                                th:text="${teacher.name}"
+                                th:value="${teacher.teacherId}">
+                        </option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+        <input type="submit" value="Save course"/>
+
+    </form>
+</div>
+
+<div th:replace="~{fragments/general :: footer}"></div>
+<div th:replace="~{fragments/general :: bottomscripts}"></div>
+
 </body>
 </html>
