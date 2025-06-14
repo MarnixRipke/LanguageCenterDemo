@@ -20,7 +20,7 @@ public class Course {
     @ManyToMany
     private Set<Teacher> teachers;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set <Lesson> lessons;
 
     public int getNumberOfLessons() {
