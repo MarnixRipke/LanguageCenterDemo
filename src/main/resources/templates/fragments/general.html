@@ -12,16 +12,9 @@
 <body data-bs-theme="dark">
 
 <div th:fragment="colormode">
-    <div class="form-check-switch mx-4">
-        <input
-                class="form-check-input p-2"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckChecked"
-                checked
-                onclick="myFunction()"
-        />
-        <label for="flexSwitchCheckChecked">Light/Dark mode</label>
+    <div class="form-check-switch mx-4 d-flex align-items-center">
+        <input type="checkbox" id="flexSwitchCheckChecked" class="switch-input" checked onclick="toggleMode()" />
+        <label for="flexSwitchCheckChecked" id="modeLabel" class="switch-label">Dark mode</label>
     </div>
 </div>
 
@@ -42,6 +35,13 @@
 <div th:fragment="bottomscripts">
     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
     <script>
+        function toggleMode() {
+            const checkbox = document.getElementById('flexSwitchCheckChecked');
+            const label = document.getElementById('modeLabel');
+            label.textContent = checkbox.checked ? 'Dark mode' : 'Light mode';
+            myFunction();
+        }
+
         function myFunction() {
             var element = document.body;
             element.dataset.bsTheme =

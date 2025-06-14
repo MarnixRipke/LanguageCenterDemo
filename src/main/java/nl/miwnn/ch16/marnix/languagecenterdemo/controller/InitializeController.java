@@ -49,6 +49,9 @@ public class InitializeController {
 
         Course dutchB21 = makeCourse("Dutch B2.1", steinmeier);
         makeLessons(dutchB21, 12);
+
+        Course frenchB12 = makeCourse("French B1.2", poulet, fatale);
+        makeLessons(frenchB12, 10);
     }
 
     private Teacher createTeacher(String name) {
