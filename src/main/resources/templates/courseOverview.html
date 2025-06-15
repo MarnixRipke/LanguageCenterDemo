@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" >
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head th:replace="~{/fragments/general :: baseheader(~{:: title})}">
     <title>Courses Overview</title>
 </head>
@@ -14,24 +14,29 @@
 
     <table>
         <tr>
-            <th>Course title</th>
-            <th>Teacher</th>
-            <th>Lessons</th>
+            <th style="padding-left: 100px; padding-right: 50px;"></th>
+            <th style="padding-right: 50px;">Course title</th>
+            <th style="padding-right: 210px;">Teacher</th>
+            <th>Registrations</th>
             <th></th>
             <th></th>
         </tr>
         <tr th:each="course : ${allCourses}">
+            <td>
+                <img th:src="${course.imageURL}" alt="Course image" style="max-height: 100px; max-width: 100px;" />
+            </td>
             <td th:text="${course.title}"></td>
             <td th:text="${course.teacherNames}"></td>
-            <td>
-                <span th:text="${course.getNumberOfAvailableLessons()}"></span> / <span
-                    th:text="${course.getNumberOfLessons()}"></span>
+            <td style="padding-right: 30px;">
+                <span th:text="${course.getNumberOfRegistrations()}"></span> /
+                <span th:text="${course.getNumberOfAvailableRegistrations()}"></span>
+
             </td>
-            <td><a th:href="@{/course/delete/{courseId} (courseId = ${course.CourseId})}">delete</a></td>
-            <td><a th:href="@{/lesson/new/{courseId} (courseId = ${course.CourseId})}">add</a></td>
+            <td style="padding: 10px;"><a th:href="@{/registration/new/{courseId} (courseId = ${course.CourseId})}">add registration</a></td>
+            <td style="padding-left: 10px;"><a th:href="@{/course/delete/{courseId} (courseId = ${course.CourseId})}">delete course</a></td>
         </tr>
     </table>
-    >
+
     <a th:href="@{/course/new}">Add new course</a>
 </div>
 

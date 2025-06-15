@@ -26,6 +26,9 @@
         <li class="nav-item">
             <a class="nav-link" th:href="@{/course/overview}">Courses</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/student/overview}">Students</a>
+        </li>
     </ul>
 </div>
 
@@ -43,7 +46,7 @@
         }
 
         function myFunction() {
-            var element = document.body;
+            const element = document.body;
             element.dataset.bsTheme =
                 element.dataset.bsTheme === "light" ? "dark" : "light";
         }

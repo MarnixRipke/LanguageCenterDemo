@@ -1,10 +1,10 @@
 package nl.miwnn.ch16.marnix.languagecenterdemo.controller;
 
 import nl.miwnn.ch16.marnix.languagecenterdemo.model.Course;
-import nl.miwnn.ch16.marnix.languagecenterdemo.model.Lesson;
+import nl.miwnn.ch16.marnix.languagecenterdemo.model.Student;
 import nl.miwnn.ch16.marnix.languagecenterdemo.model.Teacher;
 import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.CourseRepository;
-import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.LessonRepository;
+import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.StudentRepository;
 import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.TeacherRepository;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -23,13 +23,13 @@ import java.util.Set;
 public class InitializeController {
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
-    private final LessonRepository lessonRepository;
+    private final StudentRepository studentRepository;
 
     public InitializeController(TeacherRepository teacherRepository, CourseRepository courseRepository,
-                                LessonRepository lessonRepository) {
+                                StudentRepository studentRepository) {
         this.teacherRepository = teacherRepository;
         this.courseRepository = courseRepository;
-        this.lessonRepository = lessonRepository;
+        this.studentRepository = studentRepository;
     }
 
     @EventListener
@@ -44,14 +44,20 @@ public class InitializeController {
         Teacher steinmeier = createTeacher("Herr Steinmeier");
         Teacher poulet = createTeacher("Monsieur Poulet");
 
-        Course frenchA22 = makeCourse("French A2.2", fatale);
-        makeLessons(frenchA22, 8);
+        Student henk = createStudent("Henk");
+        Student annie = createStudent("Annie");
 
-        Course dutchB21 = makeCourse("Dutch B2.1", steinmeier);
-        makeLessons(dutchB21, 12);
+        Course frenchA22 = makeCourse("French A2.2",
+                "https://frans.nl/wp-content/uploads/2020/04/shutterstock_1157463325.jpg"
+                , fatale);
 
-        Course frenchB12 = makeCourse("French B1.2", poulet, fatale);
-        makeLessons(frenchB12, 10);
+        Course germanB21 = makeCourse("German B2.1",
+                "https://prod-media.bab.la/images/pic/living/Germany/Language_learning/bannergermanidiom.jpg",
+                steinmeier);
+
+        Course frenchB12 = makeCourse("French B1.2",
+                "https://img.freepik.com/premium-vector/frans-leren-concept-illustratie_277904-9078.jpg",
+                poulet, fatale);
     }
 
     private Teacher createTeacher(String name) {
@@ -61,30 +67,22 @@ public class InitializeController {
         return teacher;
     }
 
-    private Course makeCourse (String title, Teacher ... teachers) {
+    private Student createStudent(String name) {
+        Student student = new Student();
+        student.setName(name);
+        studentRepository.save(student);
+        return student;
+    }
+
+    private Course makeCourse (String title, String image, Teacher ... teachers) {
         Course course = new Course();
 
         course.setTitle(title);
+        course.setImageURL(image);
         Set<Teacher> teacherSet = new HashSet<>(Arrays.asList(teachers));
         course.setTeachers(teacherSet);
 
         courseRepository.save(course);
         return course;
-    }
-
-    private Lesson makeLesson (Course course, boolean notFull) {
-        Lesson lesson = new Lesson();
-
-        lesson.setCourse(course);
-        lesson.setNotFull(notFull);
-
-        lessonRepository.save(lesson);
-        return lesson;
-    }
-
-    private void makeLessons (Course course, int numberOfLessons) {
-        for (int i = 0; i < numberOfLessons; i++) {
-            makeLesson(course, i < 30);
-        }
     }
 }

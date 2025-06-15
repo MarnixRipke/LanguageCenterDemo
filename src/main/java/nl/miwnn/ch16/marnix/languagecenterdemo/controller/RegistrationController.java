@@ -1,9 +1,9 @@
 package nl.miwnn.ch16.marnix.languagecenterdemo.controller;
 
 import nl.miwnn.ch16.marnix.languagecenterdemo.model.Course;
-import nl.miwnn.ch16.marnix.languagecenterdemo.model.Lesson;
+import nl.miwnn.ch16.marnix.languagecenterdemo.model.Registration;
 import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.CourseRepository;
-import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.LessonRepository;
+import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.RegistrationRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,27 +13,27 @@ import java.util.Optional;
 
 /**
  * @author Marnix Ripke
- * Handle all requests related to lessons
+ * Handle all requests related to registrtations
  */
 
 @Controller
-@RequestMapping("/lesson")
-public class LessonController {
+@RequestMapping("/registration")
+public class RegistrationController {
     private final CourseRepository courseRepository;
-    private final LessonRepository lessonRepository;
+    private final RegistrationRepository registrationRepository;
 
-    public LessonController(CourseRepository courseRepository, LessonRepository lessonRepository) {
+    public RegistrationController(CourseRepository courseRepository, RegistrationRepository registrationRepository) {
         this.courseRepository = courseRepository;
-        this.lessonRepository = lessonRepository;
+        this.registrationRepository = registrationRepository;
     }
 
     @GetMapping("/new/{courseId}")
-    private String createNewLesson(@PathVariable("courseId") Long courseId) {
+    private String createNewRegistration(@PathVariable("courseId") Long courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
         if (optionalCourse.isPresent()) {
-            Lesson lesson = new Lesson(optionalCourse.get());
-            lessonRepository.save(lesson);
+            Registration registration = new Registration(optionalCourse.get());
+            registrationRepository.save(registration);
 
         }
 
