@@ -3,7 +3,6 @@ package nl.miwnn.ch16.marnix.languagecenterdemo.model;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Marnix Ripke
@@ -22,7 +21,7 @@ public class Course {
     private String imageURL;
 
     @ManyToMany
-    private Set<Teacher> teachers;
+    private List<Teacher> teachers = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<Registration> registrations = new ArrayList<>();
@@ -73,13 +72,10 @@ public class Course {
         this.title = title;
     }
 
-    public Set<Teacher> getTeachers() {
+    public List<Teacher> getTeachers() {
         return teachers;
     }
 
-    public void setTeachers(Set<Teacher> teachers) {
-        this.teachers = teachers;
-    }
 
     public String getImageURL() {
         return imageURL;
