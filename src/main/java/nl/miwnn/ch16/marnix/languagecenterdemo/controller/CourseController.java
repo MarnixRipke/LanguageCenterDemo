@@ -3,6 +3,7 @@ package nl.miwnn.ch16.marnix.languagecenterdemo.controller;
 
 import nl.miwnn.ch16.marnix.languagecenterdemo.model.Course;
 import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.CourseRepository;
+import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.RegistrationRepository;
 import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.TeacherRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
 
 /**
  * @author Marnix Ripke
@@ -23,18 +25,25 @@ public class CourseController {
 
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
+    private final RegistrationRepository registrationRepository;
 
-    public CourseController(CourseRepository courseRepository, TeacherRepository teacherRepository) {
+    public CourseController(CourseRepository courseRepository, TeacherRepository teacherRepository, RegistrationRepository registrationRepository) {
         this.courseRepository = courseRepository;
         this.teacherRepository = teacherRepository;
+        this.registrationRepository = registrationRepository;
     }
 
     @GetMapping({"/", "/course/overview"})
     private String showCourseOverview(Model datamodel) {
-        datamodel.addAttribute("allCourses", courseRepository.findAll());
+        List<Course> allCourses = courseRepository.findAll();
 
+        for (Course course : allCourses) {
+            int count = registrationRepository.countByCourse(course);
+            course.setCurrentRegistrations(count);
+        }
+
+        datamodel.addAttribute("allCourses", allCourses);
         return "courseOverview";
-
     }
 
     @GetMapping("/course/new")

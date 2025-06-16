@@ -1,18 +1,21 @@
 package nl.miwnn.ch16.marnix.languagecenterdemo.controller;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import nl.miwnn.ch16.marnix.languagecenterdemo.model.Course;
-import nl.miwnn.ch16.marnix.languagecenterdemo.model.Lesson;
+import nl.miwnn.ch16.marnix.languagecenterdemo.model.Student;
 import nl.miwnn.ch16.marnix.languagecenterdemo.model.Teacher;
 import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.CourseRepository;
-import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.LessonRepository;
+import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.StudentRepository;
 import nl.miwnn.ch16.marnix.languagecenterdemo.repositories.TeacherRepository;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 /**
  * @author Marnix Ripke
@@ -23,13 +26,14 @@ import java.util.Set;
 public class InitializeController {
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
-    private final LessonRepository lessonRepository;
+    private final StudentRepository studentRepository;
+    private final Map<String, Student> studentCache = new HashMap<>();
 
     public InitializeController(TeacherRepository teacherRepository, CourseRepository courseRepository,
-                                LessonRepository lessonRepository) {
+                                StudentRepository studentRepository) {
         this.teacherRepository = teacherRepository;
         this.courseRepository = courseRepository;
-        this.lessonRepository = lessonRepository;
+        this.studentRepository = studentRepository;
     }
 
     @EventListener
@@ -40,51 +44,77 @@ public class InitializeController {
     }
 
     private void initializeDB() {
-        Teacher fatale = createTeacher("Madame Fatale");
-        Teacher steinmeier = createTeacher("Herr Steinmeier");
-        Teacher poulet = createTeacher("Monsieur Poulet");
-
-        Course frenchA22 = makeCourse("French A2.2", fatale);
-        makeLessons(frenchA22, 8);
-
-        Course dutchB21 = makeCourse("Dutch B2.1", steinmeier);
-        makeLessons(dutchB21, 12);
-
-        Course frenchB12 = makeCourse("French B1.2", poulet, fatale);
-        makeLessons(frenchB12, 10);
-    }
-
-    private Teacher createTeacher(String name) {
-        Teacher teacher = new Teacher();
-        teacher.setName(name);
-        teacherRepository.save(teacher);
-        return teacher;
-    }
-
-    private Course makeCourse (String title, Teacher ... teachers) {
-        Course course = new Course();
-
-        course.setTitle(title);
-        Set<Teacher> teacherSet = new HashSet<>(Arrays.asList(teachers));
-        course.setTeachers(teacherSet);
-
-        courseRepository.save(course);
-        return course;
-    }
-
-    private Lesson makeLesson (Course course, boolean notFull) {
-        Lesson lesson = new Lesson();
-
-        lesson.setCourse(course);
-        lesson.setNotFull(notFull);
-
-        lessonRepository.save(lesson);
-        return lesson;
-    }
-
-    private void makeLessons (Course course, int numberOfLessons) {
-        for (int i = 0; i < numberOfLessons; i++) {
-            makeLesson(course, i < 30);
+        try {
+            loadStudents();
+            loadTeachers();
+            loadCourses();
+        } catch (IOException | CsvValidationException e) {
+            throw new RuntimeException("Failed to initialize database from CSV files", e);
         }
     }
+
+    private void loadStudents() throws IOException, CsvValidationException {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(
+                new ClassPathResource("/test_data/students.csv").getInputStream()))) {
+
+            // Skip header
+            reader.skip(1);
+
+            for (String[] studentLine : reader) {
+                Student student = new Student();
+
+                student.setName(studentLine[1]);
+
+                studentRepository.save(student);
+                studentCache.put(student.getName(), student);
+            }
+        }
+    }
+
+    private void loadTeachers() throws IOException, CsvValidationException {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(
+                new ClassPathResource("/test_data/teachers.csv").getInputStream()))) {
+
+            // Skip header
+            reader.skip(1);
+
+            for (String[] teacherLine : reader) {
+                Teacher teacher = new Teacher();
+
+                teacher.setName(teacherLine[1]);
+
+                teacherRepository.save(teacher);
+            }
+        }
+    }
+
+    private void loadCourses() throws IOException, CsvValidationException {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(
+                new ClassPathResource("test_data/courses.csv").getInputStream()))) {
+
+            // Skip header
+            reader.skip(1);
+
+            for (String[] courseLine : reader) {
+                Course course = new Course();
+
+                course.setImageURL(courseLine[0]);
+                course.setTitle(courseLine[2]);
+                course.setCurrentRegistrations(Integer.parseInt(courseLine[4]));
+
+                String teacherName = courseLine[3];
+                Teacher teacher = teacherRepository.findByName(teacherName)
+                        .orElseGet(() -> {
+                            Teacher newTeacher = new Teacher();
+                            newTeacher.setName(teacherName);
+                            return teacherRepository.save(newTeacher);
+                        });
+
+                course.getTeachers().add(teacher); // add to list
+
+                courseRepository.save(course);
+            }
+        }
+    }
+
 }

@@ -1,8 +1,8 @@
 package nl.miwnn.ch16.marnix.languagecenterdemo.model;
 
 import jakarta.persistence.*;
-
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Marnix Ripke
@@ -12,31 +12,33 @@ import java.util.Set;
 @Entity
 public class Course {
 
+    private static final int MAXIMUM_AMOUNT_REGISTRATIONS = 8;
+
     @Id @GeneratedValue
     private Long courseId;
 
     private String title;
+    private String imageURL;
 
     @ManyToMany
-    private Set<Teacher> teachers;
+    private List<Teacher> teachers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set <Lesson> lessons;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
+    private List<Registration> registrations = new ArrayList<>();
 
-    public int getNumberOfLessons() {
-        return lessons.size();
+    @Transient
+    private int currentRegistrations;
+
+    public void setCurrentRegistrations(int count) {
+        this.currentRegistrations = count;
     }
 
-    public int getNumberOfAvailableLessons () {
-        int count = 0;
+    public int getNumberOfRegistrations() {
+        return currentRegistrations;
+    }
 
-        for (Lesson lesson : lessons) {
-            if (lesson.getNotFull()) {
-                count++;
-            }
-        }
-
-        return count;
+    public int getNumberOfAvailableRegistrations() {
+        return MAXIMUM_AMOUNT_REGISTRATIONS;
     }
 
     public String getTeacherNames() {
@@ -70,19 +72,16 @@ public class Course {
         this.title = title;
     }
 
-    public Set<Teacher> getTeachers() {
+    public List<Teacher> getTeachers() {
         return teachers;
     }
 
-    public void setTeachers(Set<Teacher> teachers) {
-        this.teachers = teachers;
+
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public Set<Lesson> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(Set<Lesson> lessons) {
-        this.lessons = lessons;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }
