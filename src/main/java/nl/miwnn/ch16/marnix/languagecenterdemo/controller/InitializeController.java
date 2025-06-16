@@ -102,8 +102,7 @@ public class InitializeController {
                 course.setTitle(courseLine[2]);
                 course.setCurrentRegistrations(Integer.parseInt(courseLine[4]));
 
-                // === Handle teacher ===
-                String teacherName = courseLine[3].trim();
+                String teacherName = courseLine[3];
                 Teacher teacher = teacherRepository.findByName(teacherName)
                         .orElseGet(() -> {
                             Teacher newTeacher = new Teacher();
